@@ -10,15 +10,17 @@ var connection = mysql.createConnection({
 
 module.exports = {
 	getFunchalRoadsData: function(request_module){
-		connection.query("SELECT * from funchal_roads WHERE toponimo NOT LIKE ''", function(err, results, fields) {
+		for (var i = 0; i <= 2344; i++){
+			connection.query("SELECT * from funchal_roads WHERE toponimo NOT LIKE '' AND id = '" + i + "'", function(err, results, fields) {
 
-			console.log('Número de Registos: ' + results.length);
-	
-			for (var i in results) {
-				request_module.getBoundingBoxes(connection, results[i].toponimo, results[i].id);
-				wait.for.time(10);	
-			}	
-		});
+				if (results != null) {
+					if(results.length > 0){
+						request_module.getBoundingBoxes(connection, results[0].toponimo, results[0].id);
+					}
+				}					
+			});
+			wait.for.time(30);	
+		}
 	}		
 }
 
