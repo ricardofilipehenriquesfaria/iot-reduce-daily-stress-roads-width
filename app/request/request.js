@@ -41,7 +41,7 @@ module.exports = {
 											insertPolygonPoints(connection, json[j].polygonpoints[k][0], json[j].polygonpoints[k][1], id);
 										}
 									}
-								} else {
+								} else if (road !== "") {
 									connection.query("SELECT * from funchal_roads WHERE toponimo = '" + road + "'", function(err, results, fields) {
 										if(results.length > 0){
 											if (json[j].hasOwnProperty('boundingbox')){
@@ -71,8 +71,8 @@ function insertBoundingBox(connection, southLatitude, northLatitude, westLongitu
 		+ "' AND northLatitude = '" + northLatitude 
 		+ "' AND westLongitude = '" + westLongitude 
 		+ "' AND eastLongitude = '" + eastLongitude
-		+ "' AND id_funchal_roads = '" + id + "')";
-							
+		+ "' AND id_funchal_roads = '" + id + "'";	
+
 	connection.query(query, function(err, result, fields) {
 		
 		if(result == null) {
@@ -104,7 +104,7 @@ function insertPolygonPoints(connection, latitude, longitude, id){
 	var query = "SELECT * FROM polygonpoints WHERE"
 		+ " latitude = '" + latitude
 		+ "' AND longitude = '" + longitude
-		+ "' AND id_funchal_roads = '" + id + "')";
+		+ "' AND id_funchal_roads = '" + id + "'";
 
 	connection.query(query, function(err, result, fields) {
 		
