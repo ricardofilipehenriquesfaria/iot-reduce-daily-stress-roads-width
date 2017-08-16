@@ -42,18 +42,7 @@ module.exports = {
 										}
 									}
 								} else if (road !== "") {
-									connection.query("SELECT * from funchal_roads WHERE toponimo = '" + road + "'", function(err, results, fields) {
-										if(results.length > 0){
-											if (json[j].hasOwnProperty('boundingbox')){
-												insertBoundingBox(connection, json[j].boundingbox[0], json[j].boundingbox[1], json[j].boundingbox[2], json[j].boundingbox[3], results[0].id)
-											}
-											if (json[j].hasOwnProperty('polygonpoints')){
-												for(var k = 0; k < json[j].polygonpoints.length; k++){
-													insertPolygonPoints(connection, json[j].polygonpoints[k][0], json[j].polygonpoints[k][1], results[0].id);
-												}
-											}
-										}
-									})
+									checkIfExists(connection, json[j], road);
 								}
 							}
 						}
@@ -62,6 +51,27 @@ module.exports = {
 			}
 		});
 	}
+}
+	
+function checkIfExists (connection, json, road){
+	
+	var query = "SELECT * from funchal_roads WHERE toponimo = '" + road + "'";
+								
+	console.log(query);
+	
+	connection.query(query, function(err, results, fields) {
+		if(results.length > 0){
+			console.log(results.length);
+			if (json.hasOwnProperty('boundingbox')){
+				insertBoundingBox(connection, json.boundingbox[0], json.boundingbox[1], json.boundingbox[2], json.boundingbox[3], results[0].id)
+			}
+			if (json.hasOwnProperty('polygonpoints')){
+				for(var k = 0; k < json.polygonpoints.length; k++){
+					insertPolygonPoints(connection, json.polygonpoints[k][0], json.polygonpoints[k][1], results[0].id);
+				}
+			}
+		}
+	})
 }
 	
 function insertBoundingBox(connection, southLatitude, northLatitude, westLongitude, eastLongitude, id) {
