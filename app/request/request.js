@@ -55,6 +55,10 @@ module.exports = {
 	
 function checkIfExists (connection, json, road){
 	
+	if(road.indexOf("'") != -1){
+		road = road.replace(/'/g, ' ');
+	}
+	
 	var query = "SELECT * from funchal_roads WHERE toponimo = '" + road + "'";
 								
 	console.log(query);
